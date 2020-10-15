@@ -34,7 +34,7 @@ def run():
     with app.app_context():
 
         for filepath in files:
-            results.append(count_words.delay(filepath))
+            results.append(process_file.delay(filepath))
 
     return ('', 204)
 
@@ -55,16 +55,16 @@ def get_result_data():
 
     for result in results:
         if result.ready():
-            // TODO process results and append to result_data
+            # TODO process results and append to result_data
 
 
     result_data['proggress'] = (1 - len(results)/num_tasks)*100
     return jsonify(result_data)
 
 @celery.task
-def count_words(filepath):
+def process_file(filepath):
 
-    // TODO run process file with airfoil and return result
+    # TODO run process file with airfoil and return result
 
     return something
 

@@ -25,5 +25,5 @@ runcmd:
  - cd acc-airfoil
  - mkdir data
  - mount airfoil-main.local:/home/ubuntu/acc-airfoil data
- - celery -A analyze_tweets.celery worker --loglevel=INFO &
+ - celery -A app.celery worker --loglevel=INFO &
 
