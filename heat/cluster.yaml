@@ -1,0 +1,107 @@
+heat_template_version: 2016-04-08
+#
+# You can deploy this template using the following command:
+# 'openstack stack create -t clustersetup.yaml -e clustersetup-env.yaml <stack_name>'
+#
+# If you prefer to just start a small testing stack, you can change the *-env.yaml file
+# to 'openstack stack create -t clustersetup.yaml -e clustersetup-env-testing-small.yaml <stack_name>'
+#
+# After successful stack creation you can login with 
+# 'openstack server ssh --option "ForwardAgent=yes" -l syseleven servicehost0'
+# From there you can jump to any of your nodes. An example:
+# 'ssh lb0.node.consul'
+#
+
+description: A template to deploy and configure a loadbalanced server setup.
+
+parameters:
+  number_workers: 
+    type: string
+    default: 4
+  flavor:
+    type: string
+    default: ssc.xsmall
+    constraints:
+      - custom_constraint: nova.flavor
+  image: 
+    type: string
+    constraints:
+      - custom_constraint: glance.image
+  public_network:
+    type: string
+    default: ext-net
+  ssh_keys:
+    type: comma_delimited_list
+  worker_name:
+    type: string
+  main_name:
+    type: string
+
+resources:
+  private_network:
+    type: OS::Neutron::Net
+    properties: 
+      name: cluster-net
+
+  cluster_subnet:
+    type: OS::Neutron::Subnet
+    depends_on: [ private_network ]
+    properties:
+      name: subnet
+      dns_nameservers:
+        - 8.8.8.8
+        - 8.8.4.4
+      network: {get_resource: private_network}
+      ip_version: 4
+      cidr: 10.10.0.0/24
+      allocation_pools:
+      - {start: 10.10.0.10, end: 10.10.0.250}
+
+  cluster_router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info: {
+        network: { get_param: public_network }
+      }
+
+  router_subnet_connect:
+    type: OS::Neutron::RouterInterface
+    depends_on: [ cluster_router, private_network ]
+    properties:
+      router: { get_resource: cluster_router }
+      subnet: { get_resource: cluster_subnet }
+
+  ### Worker nodes ###
+  ###############
+  worker_group:
+    type: OS::Heat::ResourceGroup
+    depends_on: [ router_subnet_connect ]
+    properties:
+      count: { get_param: number_workers } 
+      resource_def: 
+        type: worker-node.yaml
+        properties:
+          name: g2-airfoil-worker-%index%
+          #list_join: ['-', [{ get_param: worker_name }, %index% ]]
+          flavor: { get_param: flavor }
+          image: { get_param: image }
+          private_network: { get_resource: private_network }
+          ssh_keys: { get_param: ssh_keys }
+
+  ### Main node  ###
+  ###############
+  main_group:
+    type: OS::Heat::ResourceGroup
+    depends_on: [ router_subnet_connect ]
+    properties:
+      count: 1
+      resource_def: 
+        type: main-node.yaml
+        properties:
+          name: { get_param: main_name }
+          flavor: { get_param: flavor }
+          image: { get_param: image }
+          private_network: { get_resource: private_network }
+          public_network: { get_param: public_network }
+          ssh_keys: { get_param: ssh_keys }
+
