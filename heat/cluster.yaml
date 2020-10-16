@@ -71,22 +71,6 @@ resources:
       router: { get_resource: cluster_router }
       subnet: { get_resource: cluster_subnet }
 
-  ### Worker nodes ###
-  ###############
-  worker_group:
-    type: OS::Heat::ResourceGroup
-    depends_on: [ router_subnet_connect ]
-    properties:
-      count: { get_param: number_workers } 
-      resource_def: 
-        type: worker-node.yaml
-        properties:
-          name: {get_param: worker_name}
-          flavor: { get_param: flavor }
-          image: { get_param: image }
-          private_network: { get_resource: private_network }
-          ssh_keys: { get_param: ssh_keys }
-
   ### Main node  ###
   ###############
   main_group:
@@ -104,3 +88,86 @@ resources:
           public_network: { get_param: public_network }
           ssh_keys: { get_param: ssh_keys }
 
+  ### Worker nodes ###
+  ###############
+  worker_profile:
+    type: OS::Senlin::Profile
+    depends_on: [ router_subnet_connect ]
+    properties:
+      type: worker-node.yaml
+      properties:
+        name: {get_param: worker_name}
+        flavor: { get_param: flavor }
+        image: { get_param: image }
+        private_network: { get_resource: private_network }
+        ssh_keys: { get_param: ssh_keys }
+
+  cluster:
+    type: OS::Senlin::Cluster
+    properties:
+      desired_capacity: {get_param: number_workers}
+      min_size: {get_param: number_workers}
+      profile: {get_resource: worker_profile}
+
+
+  scale_in_policy:
+    type: OS::Senlin::Policy
+    properties:
+      type: senlin.policy.scaling-1.0
+      bindings: 
+        - cluster: {get_resource: cluster}
+      properties: 
+        event: CLUSTER_SCALE_IN
+        adjustment:
+          type: CHANGE_IN_CAPACITY
+          number: 1
+
+  scale_out_policy:
+    type: OS::Senlin::Policy
+    properties:
+      type: senlin.policy.scaling-1.0
+      bindings: 
+        - cluster: {get_resource: cluster}
+      properties: 
+        event: CLUSTER_SCALE_OUT
+        adjustment:
+          type: CHANGE_IN_CAPACITY
+          number: 1
+
+
+  reciever_scale_in:
+    type: OS::Senlin::Receiver
+    properties:
+      cluster: {get_resource: cluster}
+      ation: CLUSTER_SCALE_IN
+      type: webhook
+
+  reciever_scale_out:
+    type: OS::Senlin::Receiver
+    properties:
+      cluster: {get_resource: cluster}
+      ation: CLUSTER_SCALE_OUT
+      type: webhook
+
+
+  deletion_policy:
+    type: OS::Senlin::Policy
+    properties:
+      type: senlin.policy.deletion-1.0
+      bindings:
+        - cluster: {get_resource: cluster}
+      properties:
+        criteria: YOUNGEST_FIRST
+        destroy_after_deletion: True
+        grace_period: 20
+        reduce_desired_capacity: False
+
+outputs:
+  scale_up_url:
+    description: >
+      Webhook to scale up
+    value: {get_attr: [receiver_scale_in, channel, alarm_url]}
+  scale_dn_url:
+    description: >
+      Webhook to scale down
+    value: {get_attr: [receiver_scale_out, channel, alarm_url]}
