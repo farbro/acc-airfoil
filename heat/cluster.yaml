@@ -74,11 +74,14 @@ resources:
   ### Worker nodes ###
   ###############
   worker_group:
-    type: OS::Heat::ResourceGroup
+    type: OS::Heat::AutoScalingGroup
     depends_on: [ router_subnet_connect ]
     properties:
-      count: { get_param: number_workers } 
-      resource_def: 
+      cooldown: 60
+      desired_capacity: { get_param: number_workers } 
+      min_size: { get_param: number_workers } 
+      max_size: 5
+      resource: 
         type: worker-node.yaml
         properties:
           name: {get_param: worker_name}
@@ -103,4 +106,28 @@ resources:
           private_network: { get_resource: private_network }
           public_network: { get_param: public_network }
           ssh_keys: { get_param: ssh_keys }
+  
+  scaleup_policy:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      adjustment_type: change_in_capacity
+      auto_scaling_group_id: {get_resource: worker_group}
+      cooldown: 60
+      scaling_adjustment: 1
 
+  scaledown_policy:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      adjustment_type: change_in_capacity
+      auto_scaling_group_id: {get_resource: worker_group}
+      cooldown: 60
+      scaling_adjustment: -1
+
+outputs:
+  scale_up_url:
+    description: Webhook to scale up by 1 node
+    value: {get_attr: [scaleup_policy, alarm_url]}
+
+  scale_down_url:
+    description: Webhook to scale down by 1 node
+    value: {get_attr: [scaledown_policy, alarm_url]}
