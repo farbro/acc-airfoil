@@ -12,7 +12,7 @@ heat_template_version: 2016-04-08
 # 'ssh lb0.node.consul'
 #
 
-description: A template to deploy and configure a loadbalanced server setup.
+description: Deploy the Airfoil computing cluster
 
 parameters:
   number_workers: 
@@ -81,8 +81,7 @@ resources:
       resource_def: 
         type: worker-node.yaml
         properties:
-          name: g2-airfoil-worker-%index%
-          #list_join: ['-', [{ get_param: worker_name }, %index% ]]
+          name: {get_param: worker_name}
           flavor: { get_param: flavor }
           image: { get_param: image }
           private_network: { get_resource: private_network }

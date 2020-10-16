@@ -1,11 +1,11 @@
 parameters:
   public_network: Public External IPv4 Network
   image: Ubuntu 18.04
-  worker_name: g2-airfoil-worker
+  worker_name: g2-airfoil-worker%index%
   main_name: g2-airfoil-main
 
   # Used resources can be configures with the following parameters
-  number_workers: 1
+  number_workers: 2
   flavor: ssc.xsmall
 
   # Please exchange the ssh public keys below with yours 
