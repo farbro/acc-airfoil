@@ -18,17 +18,44 @@ runcmd:
  - pip3 install -Iv celery==4.4.7
  
  - cd /home/ubuntu
+ ## put murtazo file in git so it will download?
  - git clone https://github.com/farbro/acc-airfoil.git
   
  # TODO install airfoil docker (below)
  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
  - sudo apt-get install software-properties-common
- - sudo apt-get update
+ - sudo apt update
+ - sudo apt upgrade
  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
  - sudo apt-get update
  - apt-cache policy docker-ce
  - sudo apt-get install -y docker-ce
- #
+ 
+ # deploy fenics container
+ - sudo docker run --name fenics_cont -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+
+ # assuming murtazo.tgz is already downloaded cp into container
+ - sudo docker cp murtazo.tgz fenics_cont:/home/fenics/shared/.
+ 
+ # into container
+ - sudo docker exec -t -i fenics_cont /bin/bash
+ 
+ # unpack file
+ - tar xzvf murtazo.tgz 
+ - cd murtazo/
+ - tar xvf cloudnaca.tgz 
+ - tar xvf navier_stokes_solver.tar 
+ 
+ # make the executable
+ - cd navier_stokes_solver
+ - cd src; ./compile_forms; cd ../
+ - cmake .
+ # this is where the memory shortage is in compiling cxx 
+ - make -j 2  
+ 
+ - sudo install python-numpy
+ ### running file test
+ ##- ./airfoil  10 0.0001 10. 1 ../cloudnaca/msh/r2a15n200.xml
  
  - cd acc-airfoil
  - mkdir data
