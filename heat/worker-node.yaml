@@ -11,6 +11,10 @@ parameters:
     type: string
   ssh_keys:
     type: comma_delimited_list
+  username:
+    type: string
+  pw_hash:
+    type: string
 
 resources:
 
@@ -31,7 +35,6 @@ resources:
    type: OS::Heat::CloudConfig
    properties:
      cloud_config:
-        ssh-authorized-keys: { get_param: ssh_keys }
 #       runcmd:
 #         - [ /root/install_generic.sh ]
 #      write_files:
@@ -43,6 +46,15 @@ resources:
 #           sudo: ALL=(ALL) NOPASSWD:ALL
 #           shell: /bin/bash
 #           ssh-authorized-keys: { get_param: ssh_keys }
+       users:
+         - name: {get_param: username}
+           passwd: {get_param: pw_hash}
+           gecos:  Service user
+           lock-passwd: false
+           sudo: ALL=(ALL) NOPASSWD:ALL
+           shell: /bin/bash
+
+           ssh-authorized-keys: { get_param: ssh_keys }
 
   server_port:
     type: OS::Neutron::Port

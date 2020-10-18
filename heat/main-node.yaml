@@ -13,6 +13,10 @@ parameters:
     type: comma_delimited_list
   public_network:
     type: string
+  username:
+    type: string
+  pw_hash:
+    type: string
 
 resources:
   allow_ssh:
@@ -41,7 +45,6 @@ resources:
     type: OS::Heat::CloudConfig
     properties:
       cloud_config:
-        ssh-authorized-keys: { get_param: ssh_keys }
 #        runcmd:
 #         - [ /root/install_generic.sh ]
 #      write_files:
@@ -51,14 +54,15 @@ resources:
 #        -  content: { get_file: scripts/install_appserver.sh }
 #           permissions: 0700
 #           path: /root/install_appserver.sh
-#      users:
-#        -  name: syseleven
-#           gecos:  Service user
-#           lock-passwd: false
-#           sudo: ALL=(ALL) NOPASSWD:ALL
-#           shell: /bin/bash
+        users:
+          - name: {get_param: username}
+            passwd: {get_param: pw_hash}
+            gecos:  Service user
+            lock-passwd: false
+            sudo: ALL=(ALL) NOPASSWD:ALL
+            shell: /bin/bash
 
-#           ssh-authorized-keys: { get_param: ssh_keys }
+            ssh-authorized-keys: { get_param: ssh_keys }
 
 
   server_port:

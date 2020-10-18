@@ -36,6 +36,10 @@ parameters:
     type: string
   main_name:
     type: string
+  username:
+    type: string
+  pw_hash:
+    type: string
 
 resources:
   private_network:
@@ -53,9 +57,9 @@ resources:
         - 8.8.4.4
       network: {get_resource: private_network}
       ip_version: 4
-      cidr: 10.10.0.0/24
+      cidr: 10.11.12.0/24
       allocation_pools:
-      - {start: 10.10.0.10, end: 10.10.0.250}
+      - {start: 10.11.12.10, end: 10.11.12.250}
 
   cluster_router:
     type: OS::Neutron::Router
@@ -89,6 +93,8 @@ resources:
           image: { get_param: image }
           private_network: { get_resource: private_network }
           ssh_keys: { get_param: ssh_keys }
+          username: {get_param: username }
+          pw_hash: {get_param: pw_hash }
 
   ### Main node  ###
   ###############
@@ -106,6 +112,8 @@ resources:
           private_network: { get_resource: private_network }
           public_network: { get_param: public_network }
           ssh_keys: { get_param: ssh_keys }
+          username: {get_param: username }
+          pw_hash: {get_param: pw_hash }
   
   scaleup_policy:
     type: OS::Heat::ScalingPolicy
