@@ -56,6 +56,7 @@ def get_result_data():
     for result in results:
         if result.ready():
             # TODO process results and append to result_data
+            data = 0
 
 
     result_data['proggress'] = (1 - len(results)/num_tasks)*100
@@ -65,6 +66,8 @@ def get_result_data():
 def process_file(filepath):
 
     # TODO run process file with airfoil and return result
+    
+    #./airfoil  10 0.0001 10. 1 ../cloudnaca/msh/r2a15n200.xml
 
     return something
 
