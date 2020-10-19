@@ -177,17 +177,21 @@ int main(int argc, char* argv[])
   Vector bmom, bcon;
 
   // Create files for storing solution
-  File ufile("results/velocity.pvd");
-  File pfile("results/pressure.pvd");
+//  File ufile("results/velocity.pvd");
+//  File pfile("results/pressure.pvd");
   File resfile("results/residual.pvd");
   File mufile("results/mu.pvd");
   double t_save = 0.0;
 
-  std::string res_fname = "results/drag_ligt1.m";
+  std::string res_fname = "results";
   //std::string spname = argv[5];
-  //std::string exten_fname = ".m";
-  //res_fname.append(spname);
-  //res_fname.append(exten_fname);
+  //std::string res_fname = "results";
+  std::string spname = argv[5];
+  std::string::size_type filepos = spname.rfind("/");
+  spname = spname.substr(filepos);
+  std::string::size_type pos = spname.find("xml",0);
+  spname.replace(pos, 3, "m");
+  res_fname += spname;
   std::ofstream resFile;
   resFile.open(res_fname.c_str(), std::ios::out);
   resFile << "% time" << "\t"
@@ -220,15 +224,15 @@ int main(int argc, char* argv[])
     compute_entropy_viscosity(*mesh, *res, *u, *mu);
 
     // Save to file
-    t_save += dt;
-    if (t_save > T/(double)(num_samples) || t >= T-dt)
-      {
-	ufile << *u;
-	pfile << *p;
+//    t_save += dt;
+//    if (t_save > T/(double)(num_samples) || t >= T-dt)
+//      {
+//	ufile << *u;
+//	pfile << *p;
 	// resfile << *res;
 	// mufile << *mu;
-	t_save = 0.0;
-      }
+//	t_save = 0.0;
+//      }
 
     // Assemble functionals over sub domain
     const double lift = assemble(L);
