@@ -4,10 +4,13 @@
   </head>
   <body>
     <div style="position: relative; width:80vw">
-      <canvas id="chart"></canvas>
+      <h1 style="margin-left: 250px">Airfoil Cloud®</h1>
       <div id="proggress_bar"></div>
       <div>
-        <button id="run">Run</button>
+        <div><div style="width: 250px; text-align: right; display: inline-block;">Min angle:</div><input id="min_angle" value="0"/></div>
+        <div><div style="width: 250px; text-align: right; display: inline-block;">Max angle:</div><input id="max_angle" value="30"/></div>
+        <div><div style="width: 250px; text-align: right; display: inline-block;">Number of divisions:</div><input id="num_angles" value="4"/></div>
+        <div><div style="width: 250px; text-align: right; display: inline-block;"></div><button id="run">Run</button>
         <button id="stop">Stop</button>
         <div id="time_elapsed"></div>
       </div>
@@ -50,6 +53,11 @@
           $.ajax({
             type: 'POST',
             url: '/run',
+            data: {
+              min_angle: $('#min_angle').val(),
+              max_angle: $('#max_angle').val(),
+              num_angles: $('#num_angles').val()
+            },
             success: function() {
               interval = setInterval(updateData, 500);
               start_time = performance.now();
