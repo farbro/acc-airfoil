@@ -1,6 +1,5 @@
 heat_template_version: 2016-04-08
-#
-# You can deploy this template using the following command:
+# # You can deploy this template using the following command:
 # 'openstack stack create -t clustersetup.yaml -e clustersetup-env.yaml <stack_name>'
 #
 # If you prefer to just start a small testing stack, you can change the *-env.yaml file
@@ -40,18 +39,20 @@ parameters:
     type: string
   pw_hash:
     type: string
+  subnet_name:
+    type: string
 
 resources:
   private_network:
     type: OS::Neutron::Net
     properties: 
-      name: cluster-net
+      name: {get_param: subnet_name}
 
   cluster_subnet:
     type: OS::Neutron::Subnet
     depends_on: [ private_network ]
     properties:
-      name: subnet
+      name: {get_param: subnet_name}
       dns_nameservers:
         - 8.8.8.8
         - 8.8.4.4

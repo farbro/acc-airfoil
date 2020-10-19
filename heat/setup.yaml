@@ -3,8 +3,9 @@ parameters:
   image: Ubuntu 18.04
   worker_name: g2-airfoil-worker
   main_name: g2-airfoil-main
+  subnet_name: airfoilnet
   username: airfoil
-  pw_hash: $6$rounds=4096$nn1v3X7Nc$JCJntPVP/e8PnFIMenzT8NeoUDoau4bpnly7MercCk3mHVsAPhhpKlNWd8jTKNZqe6Gt9WpqYBKq3U3t6MP6b0
+  pw_hash: "$6$rounds=4096$XKsiFIyJ.rqcqI$55XVyM5nMtZIpTURNgtJkkPXMtMXfkv18BEvSfxqkztu2Vcx0/XPRGD8724SiCtrR7FLhCfPjejbUDYgfilxI1"
 
   # Used resources can be configures with the following parameters
   number_workers: 2
