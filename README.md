@@ -1,5 +1,7 @@
 # acc-airfoil
 
+need medium flavour to compile airfoil
+
 In deploy, worker-init 
 - installs docker
 - creates fenics container
