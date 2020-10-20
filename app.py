@@ -29,22 +29,26 @@ def run():
     # Initialize result data
     result_data['proggress'] = 0
     result_data['files'] = []
+    result_data['total_jobs'] = 0
 
     # Get parameters
     min_angle = int(request.form['min_angle'])
     max_angle = int(request.form['max_angle'])
     num_angles = int(request.form['num_angles'])
 
-    # Calculate angle set
-    angle_step = (max_angle - min_angle) / num_angles
-
     num_tasks = num_angles
 
     with app.app_context():
 
         # Push all angles to the queue
-        for angle in range(min_angle, max_angle, angle_step):
+
+        # Calculate angle step
+        angle_step = (max_angle - min_angle) / (num_angles-1)
+
+        angle = min_angle
+        for n in range(num_angles):
             results.append(process_file.delay(angle))
+            angle += angle_step
 
     # TODO run webhooks to scale out
 
@@ -69,6 +73,9 @@ def get_result_data():
         if result.ready():
             # TODO process results and append to result_data
             result_data['files'].append(result.get())
+            results.remove(result)
+
+            result_data['total_jobs'] += 1
 
             # TODO run webhooks to scale in
 
@@ -85,7 +92,7 @@ def process_file(angle):
 
     # TODO run process file with airfoil and return result
 
-    return 0
+    return 'filename goes here'
 
 
 if __name__ == '__main__':

@@ -34,13 +34,11 @@
           // Retrieve filenames
           var files = data['files'];
 
-          // Create HTML file lsit
-          files_html = $.map(files, function(file) {
-            return $('li').append($('a', {href: file}).text(file));
+          // Create HTML file list
+          $('#results').html('');
+          $.each(files, function(i, filename) {
+            $('#results').append('<li><a href="files/' + filename + '">' + filename + '</a></li>');
           });
-
-          // Update HTML file list
-          $('#results').html(files_html);
 
           var proggress = parseInt(data['proggress']);
           proggress_bar.go(proggress);
@@ -49,7 +47,7 @@
           var time_elapsed = (end_time - start_time)/1000.0;
 
           $('#time_elapsed').text(
-            data['total_files'] + ' files processed in '+ time_elapsed.toFixed(2) + ' s');
+            data['total_jobs'] + ' jobs processed in '+ time_elapsed.toFixed(2) + ' s');
 
           if (proggress >= 100) {
             stopUpdating();
