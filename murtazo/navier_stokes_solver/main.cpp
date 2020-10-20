@@ -194,9 +194,9 @@ int main(int argc, char* argv[])
   res_fname += spname;
   std::ofstream resFile;
   resFile.open(res_fname.c_str(), std::ios::out);
-  resFile << "% time" << "\t"
-  	  << "lift" << "\t"
-     	  << "drag" << "\n";
+  //resFile << "% time" << "\t"
+  //	  << "lift" << "\t"
+    // 	  << "drag" << "\n";
   resFile.flush();
 
   set_log_active(false);
@@ -237,10 +237,9 @@ int main(int argc, char* argv[])
     // Assemble functionals over sub domain
     const double lift = assemble(L);
     const double drag = assemble(D);
-    resFile << t << "\t"
-	    << lift << "\t"
-	    << drag << "\n";
-    resFile.flush();
+    if(t+dt >= T + eps_){
+	resFile  << lift;
+	resFile.flush();}
 
     // Time-stepping monitor
     Function res_u(V), res_p(Q);
@@ -250,7 +249,7 @@ int main(int argc, char* argv[])
     *res_p.vector() = *p->vector();
     *res_p.vector() -= *p0->vector();
 
-    set_log_active(true);
+    set_log_active(false);
     info("l2(u) = %e, l2(p) = %e, k = %lf, t = %lf, iter_time = %f sec", 
 	 res_u.vector()->norm("l2"), res_p.vector()->norm("l2"), dt, t, toc() );
     set_log_active(false);

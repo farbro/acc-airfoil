@@ -5,6 +5,7 @@ import glob
 import json
 import re
 import copy
+import subprocess
 
 app = Flask(__name__)
 celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@tweet-analyzr.local:5672/twhost')
@@ -55,18 +56,19 @@ def get_result_data():
 
     for result in results:
         if result.ready():
-            # TODO process results and append to result_data
-
-
+		dir = result.get()
+		lift_res = os.popen(['cat',dir).readlines()
     result_data['proggress'] = (1 - len(results)/num_tasks)*100
     return jsonify(result_data)
 
 @celery.task
-def process_file(filepath):
-
-    # TODO run process file with airfoil and return result
-
-    return something
+def process_file(angle):
+    cmd = "./airfoil 2 0.01 10. 1 " + angle + " 20 0"
+    subp = subprocess.run(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,encoding="utf-8")
+    if subp.returncode == 0:
+        return "./murtazo/navier_stokes_solver/results/r0a" + angle + "n200.m"
+    else:
+        return -1
 
 
 if __name__ == '__main__':
