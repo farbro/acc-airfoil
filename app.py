@@ -31,9 +31,9 @@ def run():
     result_data['files'] = []
 
     # Get parameters
-    min_angle = request.form['min_angle']
-    max_angle = request.form['max_angle']
-    num_angles = request.form['num_angles']
+    min_angle = int(request.form['min_angle'])
+    max_angle = int(request.form['max_angle'])
+    num_angles = int(request.form['num_angles'])
 
     # Calculate angle set
     angle_step = (max_angle - min_angle) / num_angles
