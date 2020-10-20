@@ -1,5 +1,6 @@
 #cloud-config
-
+# requirements: murtazo.tgz in main, medium flavour for compiling
+# problems: cd into right directory at the end
 apt_update: true
 apt_upgrade: true
 
