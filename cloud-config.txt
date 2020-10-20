@@ -1,0 +1,32 @@
+#cloud-config
+
+apt_getupdate: true
+apt_upgrade: true
+apt_sources:
+ - source: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+   key: | ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDEHtAqraFoAODh55CqOfPBzd2F7I1V+u8pOPDmzpDhRFWzpfa6g4lD4Zi/aWkeaJ5LcziL/MlRCD/lSbSI4yY8dRWzyy6qZjX1lXNCyzhJHLhC0m2oeMf2NzFXEf3u2PE0tTnjbJ94fE76+Rl6YTE09mmng/W76CXOsPAPztqHwLyCpsVAL4spwKJjRgy43TCwZzAgnMq4lYj0l0pix5WPZMEGlfRfnCwP7GlfHr4ihCzlqfcw9PREwet4adNJIJUyrjRhgkNWf7+DSb50itJQ2bwvbMDWnUdUzUfjCaoEcUwPAOmE4/pZc01VkDmnwNeiNKFhu4wnvR6ZX6AiqTOf      -----Generated-by-NovaBLOCK-----
+   filename: docker.list
+apt_update: true
+packages:
+ - cowsay
+ - docker-ce
+byobu_default: system
+
+write_files:
+- path: /home/ubuntu/Dockerfile
+    content: |
+      FROM fedora:30
+      RUN dnf -y update
+      RUN dnf -y install python-pip git
+      RUN pip install --upgrade pip
+      RUN pip install flask
+      RUN dnf install -y cowsay
+      RUN git clone https://github.com/TDB-UU/csaas.git
+      WORKDIR /csaas/cowsay
+      EXPOSE 5000
+      CMD ["python","app.py"]
+
+runcmd:
+ - docker build --rm -t cowsay:v1.0 -f /home/ubuntu/Dockerfile
+ - docker run -d -p 5000:5000 cowsay:v1.0
+                                          
