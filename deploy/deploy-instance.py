@@ -11,7 +11,7 @@ from keystoneauth1 import session
 
 parser = argparse.ArgumentParser(description="Deploy an instance")
 
-parser.add_argument('--flavor', type=str, nargs='?', default="ssc.xsmall")
+parser.add_argument('--flavor', type=str, nargs='?', default="ssc.medium")
 parser.add_argument('--private_network', type=str, nargs='?', default="UPPMAX 2020/1-2 Internal IPv4 Network")
 parser.add_argument('--public_network', type=str, nargs='?', default= "Public External IPv4 Network")
 parser.add_argument('--image_name', type=str, nargs='?', default= "Ubuntu 18.04")
