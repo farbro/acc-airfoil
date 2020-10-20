@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 from celery import Celery
 import glob
 import json
@@ -10,6 +10,7 @@ app = Flask(__name__)
 celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@tweet-analyzr.local:5672/twhost')
 
 mesh_files = "data/*"
+results_path = 'data/results'
 
 result_data = {} 
 results = []
@@ -67,18 +68,24 @@ def get_result_data():
     for result in results:
         if result.ready():
             # TODO process results and append to result_data
+            
 
             # TODO run webhooks to scale in
 
     result_data['proggress'] = (1 - len(results)/num_tasks)*100
     return jsonify(result_data)
 
+# Serve result files
+@app.route('/get-file/<path:filename>', methods=['GET'])
+def get_file(filename):
+    return send_from_directory(results_path, filename, as_attachment=True)
+
 @celery.task
 def process_file(angle):
 
     # TODO run process file with airfoil and return result
 
-    return something
+    return 0
 
 
 if __name__ == '__main__':
