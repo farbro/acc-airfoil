@@ -31,19 +31,19 @@ def run():
     result_data['files'] = []
 
     # Get parameters
-    start_angle = request.form['start_angle']
-    end_angle = request.form['end_angle']
+    min_angle = request.form['min_angle']
+    max_angle = request.form['max_angle']
     num_angles = request.form['num_angles']
 
     # Calculate angle set
-    angle_step = (end_angle - start_angle) / num_angles
+    angle_step = (max_angle - min_angle) / num_angles
 
     num_tasks = num_angles
 
     with app.app_context():
 
         # Push all angles to the queue
-        for angle in range(start_angle, end_angle, angle_step):
+        for angle in range(min_angle, max_angle, angle_step):
             results.append(process_file.delay(angle))
 
     # TODO run webhooks to scale out
