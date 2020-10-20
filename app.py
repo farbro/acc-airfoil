@@ -27,8 +27,8 @@ def run():
     global num_tasks
 
     # Initialize result data
-    result_data['total_files'] = 0
     result_data['proggress'] = 0
+    result_data['files'] = []
 
     # Get parameters
     start_angle = request.form['start_angle']
@@ -68,7 +68,7 @@ def get_result_data():
     for result in results:
         if result.ready():
             # TODO process results and append to result_data
-            
+            result_data['files'].append(result.get())
 
             # TODO run webhooks to scale in
 
