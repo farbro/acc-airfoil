@@ -2,10 +2,12 @@
 
 need medium flavour to compile airfoil
 
-In deploy, worker-init 
+In deploy, worker-works-final 
 - installs docker
 - creates fenics container
-- sends zipped murtazo folder to container (assuming that its in the current dir)
-- unpacks and compiles airfoil executable.
+- sends murtazo folder to container
+- compiled airfoil executable already in murtazo folder.
 
-- maybe instead of compiling airfoil can run shuyi's shell file to convers mesh files and compile airfoil
+ssh into the worker, sent a test xml file, went into container and could run the xml file
+
+
