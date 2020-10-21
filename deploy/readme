@@ -1,0 +1,7 @@
+worker-connects-final.txt
+
+- clones into emma branch where murtazo folder and the airfoil executable is already compiled. There are no mesh/xml files in it.
+- intstalls docker and creates a container for fenics.
+- moves murtazo into the container
+- mounts airfoil/data 
+- runs celery worker
