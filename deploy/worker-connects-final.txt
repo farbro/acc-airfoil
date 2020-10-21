@@ -1,0 +1,45 @@
+#cloud-config
+# works
+apt_update: true
+apt_upgrade: true
+
+packages:
+ - python3-pip
+ - build-essential
+ - rabbitmq-server
+ - nfs-common
+ - libnss-mdns
+ - mdns-scan
+
+byobu_default: system 
+
+runcmd:
+ - pip3 install Flask celery
+ - pip3 install -Iv celery==4.4.7
+ - sudo apt install python-numpy
+ 
+ - cd /home/ubuntu
+ - git clone https://github.com/farbro/acc-airfoil.git
+ - cd acc-airfoil
+ - sudo git checkout emma
+ - cd ..
+
+ # TODO install airfoil docker (below)
+ - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+ - sudo apt-get install software-properties-common
+ - sudo apt update
+ - sudo apt upgrade
+ - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+ - sudo apt-get update
+ - apt-cache policy docker-ce
+ - sudo apt-get install -y docker-ce
+ 
+ # deploy fenics container
+ - sudo docker run --name fenics_cont -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+
+ - sudo docker cp acc-airfoil/murtazo fenics_cont:/home/fenics/shared/.
+
+ - cd /home/ubuntu/acc-airfoil
+ - mkdir data
+ - mount airfoil-main.local:/home/ubuntu/acc-airfoil data
+ - celery -A app.celery worker --loglevel=INFO &
