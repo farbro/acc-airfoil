@@ -1,4 +1,4 @@
-# Install script for directory: /home/murtazo/local/bitbucket/salman/navier_stokes_solver
+# Install script for directory: /home/fenics/shared/murtazo/navier_stokes_solver
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/murtazo/local/bitbucket/salman/navier_stokes_solver/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/fenics/shared/murtazo/navier_stokes_solver/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
