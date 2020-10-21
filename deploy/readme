@@ -5,3 +5,10 @@ worker-connects-final.txt
 - moves murtazo into the container
 - mounts airfoil/data 
 - runs celery worker
+
+sudo docker exec -t -i fenics_cont /bin/bash 
+./murtazo/navier_stokes_solver/airfoil  10 0.0001 10. 1 path/to/xml/r0a0n200.xml
+
+maybe path ../cloudnaca/msh/r2a15n200.xml?
+no files there atm, merge with shuyis?
+
