@@ -73,6 +73,7 @@ runcmd:
  - chown -R ubuntu:airfoil /home/ubuntu/acc-airfoil 
  - chmod -R 644 /home/ubuntu/acc-airfoil 
  - chmod 755 /home/ubuntu/acc-airfoil 
+ - chmod 755 /home/ubuntu/acc-airfoil/templates
 
 # Configure NFS share
  - mkdir data
