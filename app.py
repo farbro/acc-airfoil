@@ -7,7 +7,7 @@ import re
 import copy
 
 app = Flask(__name__)
-celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@g2-airfoil-main-test.local:5672/twhost')
+celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@g2-airfoil-main.local:5672/twhost')
 
 mesh_files = "data/*"
 results_path = 'data/results'
@@ -72,10 +72,12 @@ def get_result_data():
     for result in results:
         if result.ready():
             # TODO process results and append to result_data
-            result_data['files'].append(result.get())
-            results.remove(result)
-
-            result_data['total_jobs'] += 1
+            res_dir = result.get()
+            if res_dir:
+                result_data['files'].append(res_dir)
+                filename = res_dir.split('/')[-1]
+		results.remove(result)
+		result_data['total_jobs'] += 1
 
             # TODO run webhooks to scale in
 
@@ -89,11 +91,18 @@ def get_file(filename):
 
 @celery.task
 def process_file(angle):
-
-    # TODO run process file with airfoil and return result
-
-    return 'filename goes here'
-
+    cmd1 = "cd ./murtazo/cloudnaca/"
+    cmd2 = "./runair.sh 2 0.01 10. 1 " + str(angle) +" 200 0"
+    cmd = cmd1 + " && " + cmd2
+    subp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subp.wait()
+    if subp.poll() == 0:
+        cpcmd = "cp ./murtazo/navier_stokes_solver/results/r0a" + str(angle) + "n200.m " + results_path + "r0a" + str(angle) + "n200.m"
+        subprocess.run(cpcmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        dir = results_path + "r0a" + str(angle) + "n200.m"
+        print(dir)
+    else:
+        print(0)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000 ,debug=True)
