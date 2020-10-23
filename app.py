@@ -9,7 +9,7 @@ import copy
 import subprocess
 
 app = Flask(__name__)
-celery = Celery(app.name, backend='rpc://', broker='pyamqp://localhost:5672/')
+celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@g2-airfoil-main-test.local:5672/twhost')
 
 #mesh_files = "data/*"
 results_path = "/home/ubuntu/acc-airfoil/data/results/"
@@ -85,6 +85,7 @@ def get_result_data():
                 filename = res_dir.split('/')[-1]
                 # This function should be called here?
                 get_file(filename)
+		results.remove(result)
                 result_data['total_files'] += 1
     result_data['proggress'] = (1 - len(results)/num_tasks)*100
     return jsonify(result_data)
