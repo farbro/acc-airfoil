@@ -16,6 +16,13 @@ packages:
 
 byobu_default: system 
 
+users:
+ - default
+ - name: airfoil
+   groups: airfoil
+   system: true
+   sudo: false
+
 write_files:
  - path: /etc/exports
    content: |
@@ -34,7 +41,12 @@ runcmd:
  - cd /home/ubuntu
  - git clone https://github.com/farbro/acc-airfoil.git
  - cd acc-airfoil
- - python3 app.py &
+ - git checkout secure
+
+ # Set priveleges
+ - chown -R ubuntu:airfoil /home/ubuntu/acc-airfoil 
+ - chmod -R 644 /home/ubuntu/acc-airfoil 
+ - chmod 755 /home/ubuntu/acc-airfoil 
 
  - mkdir data
  - chown nobody:nogroup data
@@ -42,5 +54,12 @@ runcmd:
  - exportfs -a
  - sytemctl restart nfs-kernel-server
  
- - flower -A app.celery --port=5555 &
+# Install flower service
+ - cp /home/ubuntu/acc-airfoil/deploy/services/airfoil-flower.service /etc/systemd/
+ - systemctl start airfoil-flower
+ - systemctl enable airfoil-flower
 
+# Install airfoil app service
+ - cp /home/ubuntu/acc-airfoil/deploy/services/airfoil-main.service /etc/systemd/
+ - systemctl start airfoil-main
+ - systemctl enable airfoil-main
