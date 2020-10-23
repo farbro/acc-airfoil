@@ -45,3 +45,56 @@ def run():
         # Calculate angle step
         angle_step = (max_angle - min_angle) / (num_angles-1)
 
+        angle = min_angle
+        for n in range(num_angles):
+            results.append(process_file.delay(angle))
+            angle += angle_step
+
+    # TODO run webhooks to scale out
+
+    return ('', 204)
+
+@app.route("/stop", methods=["POST"])
+def stop():
+    global results
+    for result in results:
+        result.revoke()
+
+    results = []
+
+    return ('', 204)
+
+@app.route('/data', methods=['GET'])
+def get_result_data():
+    global results
+    global num_tasks
+
+    for result in results:
+        if result.ready():
+            # TODO process results and append to result_data
+            result_data['files'].append(result.get())
+            results.remove(result)
+
+            result_data['total_jobs'] += 1
+
+            # TODO run webhooks to scale in
+
+    result_data['proggress'] = (1 - len(results)/num_tasks)*100
+    return jsonify(result_data)
+
+# Serve result files
+@app.route('/get-file/<path:filename>', methods=['GET'])
+def get_file(filename):
+    return send_from_directory(results_path, filename, as_attachment=True)
+
+@celery.task
+def process_file(angle):
+
+    # TODO run process file with airfoil and return result
+
+    return 'filename goes here'
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80 ,debug=True)
+
