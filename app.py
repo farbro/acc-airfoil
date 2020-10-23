@@ -7,7 +7,7 @@ import re
 import copy
 
 app = Flask(__name__)
-celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@g2-airfoil-main.local:5672/twhost')
+celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@g2-airfoil-main-test.local:5672/twhost')
 
 mesh_files = "data/*"
 results_path = 'data/results'
@@ -96,5 +96,5 @@ def process_file(angle):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80 ,debug=True)
+    app.run(host='0.0.0.0', port=5000 ,debug=True)
 
