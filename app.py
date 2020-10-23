@@ -73,11 +73,11 @@ def get_result_data():
         if result.ready():
             # TODO process results and append to result_data
             res_dir = result.get()
-            if res_dir:
-                result_data['files'].append(res_dir)
-                filename = res_dir.split('/')[-1]
-		results.remove(result)
-		result_data['total_jobs'] += 1
+            #if res_dir:
+            result_data['files'].append(res_dir)
+            #filename = res_dir.split('/')[-1]
+            results.remove(result)
+            result_data['total_jobs'] += 1
 
             # TODO run webhooks to scale in
 
@@ -99,10 +99,10 @@ def process_file(angle):
     if subp.poll() == 0:
         cpcmd = "cp ./murtazo/navier_stokes_solver/results/r0a" + str(angle) + "n200.m " + results_path + "r0a" + str(angle) + "n200.m"
         subprocess.run(cpcmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        dir = results_path + "r0a" + str(angle) + "n200.m"
-        print(dir)
+        dir_res = results_path + "r0a" + str(angle) + "n200.m"
+        return dir_res
     else:
-        print(0)
+        return 0
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000 ,debug=True)
