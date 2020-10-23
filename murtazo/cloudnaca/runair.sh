@@ -49,4 +49,5 @@ fi
 xmlfile="$(echo $newname|sed -e 's/msh/xml/')"
 dolfin-convert ./$MSHDIR/$newname ./$MSHDIR/$xmlfile
 cd ../navier_stokes_solver
-./airfoil $num_samples $visc $speed $T ../cloudnaca/$MSHDIR/$xmlfile
+sudo docker exec -t -i fenics_cont ./murtazo/navier_stokes_solver/airfoil  $num_samples $visc $speed $T ../cloudnaca/$MSHDIR/$xmlfile
+
