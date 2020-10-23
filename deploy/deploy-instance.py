@@ -11,15 +11,15 @@ from keystoneauth1 import session
 
 parser = argparse.ArgumentParser(description="Deploy an instance")
 
-parser.add_argument('--flavor', type=str, nargs='?', default="ssc.medium")
+parser.add_argument('--flavor', type=str, nargs='?', default="ssc.xsmall")
 parser.add_argument('--private_network', type=str, nargs='?', default="UPPMAX 2020/1-2 Internal IPv4 Network")
 parser.add_argument('--public_network', type=str, nargs='?', default= "Public External IPv4 Network")
 parser.add_argument('--image_name', type=str, nargs='?', default= "Ubuntu 18.04")
 parser.add_argument('--cloudinit', type=str, nargs='?')
 parser.add_argument('--security_group', type=str, action='append', default=['default'])
 parser.add_argument('--num_instances', type=int, nargs='?', default=1)
+parser.add_argument('--key_name', type=str)
 parser.add_argument('instance_name', type=str)
-parser.add_argument('key_name', type=str)
 
 args = parser.parse_args()
 
