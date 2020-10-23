@@ -1,13 +1,19 @@
 # acc-airfoil
+Airfoil-as-a-Service to perform airfoil computations on OpenStack.
 
-need medium flavour to compile airfoil
+## Deploy main node
+```
+python deploy/deploy-instance.py \
+  --cloudinit deploy/broker-init.yaml \
+  --security_group [SECURITY GROUP] \
+    g2-airfoil-main
+```
 
-In deploy, worker-works-final 
-- installs docker
-- creates fenics container
-- sends murtazo folder to container
-- compiled airfoil executable already in murtazo folder.
-
-ssh into the worker, sent a test xml file, went into container and could run the xml file
-
-
+## Deploy workers
+```
+python deploy/deploy-instance.py \
+  --cloudinit deploy/worker-init.yaml \
+  --flavor ssc.medium \
+  --num_instances 2 \
+    g2-airfoil-worker
+```
