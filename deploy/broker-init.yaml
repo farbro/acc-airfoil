@@ -48,7 +48,7 @@ runcmd:
  - echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDnb/qBTnmXiU3T4yBLgNr6p2LPbspEf1wMqbyDmjoqsEF4vWmfeMeZMUrdpwjcBvlpyczyG+UQfacOLzgK3OwXXMesiCn/4HDSmiJbY5+Z3NgZAKZP73b6dMxpbjr5RPuHWMQfm6jBqaODuA/lRs7iOTDczYaacmERsF7wT3jSHjRjXHCTZX2y0+XK43mFUGyA1NGmxvwbmA47OhC3hkcpjxtT15lKlWChgkX4DyCKJOHK5c2IfAOAX1pT+o1K5/QQHCtdTHqbi9lMwTIgKUTBQFe1CgRO1dyojOv9/gYT2QPv+B7/j4IeOsynHav2WQpM9dinKqHeb4iLzF6XqFxv mats@ugh" >> /home/ubuntu/.ssh/authorized_keys
 
 # Create group and user airfoil
- - groupadd airfoil
+ - groupadd -g 1001 airfoil
  - useradd -u 1001 -g airfoil airfoil
 
 # Add ubuntu to group airfoil
@@ -76,17 +76,17 @@ runcmd:
 
 # Configure NFS share
  - mkdir data
- - chown nobody:nogroup data
- - chmod 777 data
+ - chown ubuntu:airfoil data
+ - chmod 770 data
  - exportfs -a
- - sytemctl restart nfs-kernel-server
+ - systemctl restart nfs-kernel-server
  
 # Install flower service
- - cp /home/ubuntu/acc-airfoil/deploy/services/airfoil-flower.service /etc/systemd/service
+ - cp /home/ubuntu/acc-airfoil/deploy/services/airfoil-flower.service /etc/systemd/system/
  - systemctl start airfoil-flower
  - systemctl enable airfoil-flower
 
 # Install airfoil app service
- - cp /home/ubuntu/acc-airfoil/deploy/services/airfoil-main.service /etc/systemd/service
+ - cp /home/ubuntu/acc-airfoil/deploy/services/airfoil-main.service /etc/systemd/system/
  - systemctl start airfoil-main
  - systemctl enable airfoil-main
