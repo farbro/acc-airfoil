@@ -67,7 +67,6 @@ runcmd:
  - cd /home/ubuntu
  - git clone https://github.com/farbro/acc-airfoil.git
  - cd acc-airfoil
- - git checkout secure
 
  # Set privileges
  - chown -R ubuntu:airfoil /home/ubuntu/acc-airfoil 

@@ -32,7 +32,6 @@ runcmd:
  - cd /home/ubuntu
  - git clone https://github.com/farbro/acc-airfoil.git
  - cd acc-airfoil
- - git checkout secure
  - cd ..
 
  # TODO install airfoil docker (below)
