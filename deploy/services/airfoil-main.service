@@ -9,7 +9,7 @@ Restart=always
 RestartSec=1
 User=airfoil
 WorkingDirectory=/home/ubuntu/acc-airfoil
-ExecStart=python3 /home/ubuntu/acc-airfoil/app.py
+ExecStart=/usr/bin/python3 /home/ubuntu/acc-airfoil/app.py
 
 [Install]
 WantedBy=multi-user.target
