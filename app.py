@@ -5,6 +5,9 @@ import glob
 import json
 import re
 import copy
+import math
+import os
+import subprocess
 
 app = Flask(__name__)
 celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@g2-airfoil-main-test.local:5672/twhost')
@@ -47,6 +50,8 @@ def run():
 
         angle = min_angle
         for n in range(num_angles):
+            angle_arg = float(angle[0])
+            angle_arg = floor(angle_arg)
             results.append(process_file.delay(angle))
             angle += angle_step
 
