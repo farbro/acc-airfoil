@@ -73,7 +73,7 @@ runcmd:
  - mkdir data
  - chown ubuntu:airfoil data
  - chmod 770 data
- - mount g2-test-main.local:/home/ubuntu/acc-airfoil/data data
+ - mount g2-airfoil-main.local:/home/ubuntu/acc-airfoil/data data
 
 # Install worker service
  - cp /home/ubuntu/acc-airfoil/deploy/services/airfoil-worker.service /etc/systemd/system/
