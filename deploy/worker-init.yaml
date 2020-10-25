@@ -60,7 +60,7 @@ runcmd:
  - mkdir data
  - chown ubuntu:airfoil data
  - chmod 770 data
- - mount 130.238.29.26:/home/ubuntu/acc-airfoil/data data
+ - mount 192.168.2.101:/home/ubuntu/acc-airfoil/data data
 
 # Install worker service
  - cp /home/ubuntu/acc-airfoil/deploy/services/airfoil-worker.service /etc/systemd/system/
