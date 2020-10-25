@@ -54,7 +54,6 @@ def run():
             angle_arg = floor(angle_arg)
             results.append(process_file.delay(angle))
             angle += angle_step
-
     # TODO run webhooks to scale out
 
     return ('', 204)
@@ -96,9 +95,9 @@ def get_file(filename):
 
 @celery.task
 def process_file(angle):
-    cmd1 = "cd ./murtazo/cloudnaca/"
-    cmd2 = "./runair.sh 2 0.01 10. 1 " + str(angle) +" 200 0"
-    cmd = cmd1 + " && " + cmd2
+#    cmd1 = "cd ./murtazo/cloudnaca/"
+    cmd = "./murtazo/cloudnaca/runair.sh 2 0.01 10. 1 " + str(angle) +" 10 0"
+#    cmd = cmd1 + " && " + cmd2
     subp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     subp.wait()
     if subp.poll() == 0:
