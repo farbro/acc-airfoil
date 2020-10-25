@@ -30,6 +30,11 @@ n_nodes="$6"
 n_levels="$7"
 
 geofile=a${angle}n${n_nodes}.geo
+if [ -f $GEODIR/$geofile ]; then
+  echo exist
+  exit 1
+fi
+
 ./naca2gmsh_geo.py $NACA1 $NACA2 $NACA3 $NACA4 $angle $n_nodes > $GEODIR/$geofile
 mshfile="$(echo $geofile|sed -e 's/geo/msh/')";
 $GMSHBIN -v 0 -nopopup -2 -o $MSHDIR/r0$mshfile $GEODIR/$geofile;

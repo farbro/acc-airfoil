@@ -98,7 +98,7 @@ def process_file(angle):
 
     subp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     subp.wait()
-    if subp.poll() == 0:
+    if subp.poll() <= 0:
         results_filename = "r0a" + str(angle) + "n200.m"
         cpcmd = "docker cp fenics_cont:/home/fenics/shared/murtazo/navier_stokes_solver/results/" + results_filename + " " + results_path
         print(cpcmd)
