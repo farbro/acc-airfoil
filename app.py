@@ -94,21 +94,18 @@ def get_file(filename):
 @celery.task
 def process_file(angle):
     global results_path
+    cmd = "docker exec -i -w /home/fenics/shared/murtazo/cloudnaca/ fenics_cont ./runair.sh 2 0.01 10. 1 " + str(angle) +" 10 0"
 
-#    cmd1 = "cd ./murtazo/cloudnaca/"
-#    cmd = "./murtazo/cloudnaca/runair.sh 2 0.01 10. 1 " + str(angle) +" 10 0"
-#    cmd = cmd1 + " && " + cmd2
-#    subp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#    subp.wait()
-#    if subp.poll() == 0:
-#        cpcmd = "cp ./murtazo/navier_stokes_solver/results/r0a" + str(angle) + "n200.m " + results_path + "r0a" + str(angle) + "n200.m"
-#        subprocess.run(cpcmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#        dir_res = results_path + "r0a" + str(angle) + "n200.m"
-#        return dir_res
-#    else:
-#        return 0
-    dir_res = results_path + "r0a" + str(angle) + "n200.m"
-    return dir_res
+    subp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subp.wait()
+    if subp.poll() == 0:
+        results_filename = "r0a" + str(angle) + "n200.m " + results_path + "r0a" + str(angle) + "n200.m"
+        cpcmd = "docker cp fenics_cont:/home/fenics/shared/murtazo/navier_stokes_solver/results/" + results_filename + " " + results_path
+        subprocess.run(cpcmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        dir_res = results_path + results_filename
+        return dir_res
+    else:
+        return 0
 
 
 if __name__ == '__main__':
