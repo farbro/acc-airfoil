@@ -94,12 +94,12 @@ def get_file(filename):
 @celery.task
 def process_file(angle):
     global results_path
-    cmd = "docker exec -i -w /home/fenics/shared/murtazo/cloudnaca/ fenics_cont ./runair.sh 2 0.01 10. 1 " + str(angle) +" 10 0"
+    cmd = "docker exec -i -w /home/fenics/shared/murtazo/cloudnaca/ fenics_cont ./runair.sh 10 0.001 10. 1 " + str(angle) +" 200 0"
 
     subp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     subp.wait()
     if subp.poll() == 0:
-        results_filename = "r0a" + str(angle) + "n10.m"
+        results_filename = "r0a" + str(angle) + "n200.m"
         cpcmd = "docker cp fenics_cont:/home/fenics/shared/murtazo/navier_stokes_solver/results/" + results_filename + " " + results_path
         print(cpcmd)
         subprocess.run(cpcmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
