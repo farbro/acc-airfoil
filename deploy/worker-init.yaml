@@ -19,7 +19,7 @@ runcmd:
 
 # Create group and user airfoil
  - groupadd -g 1001 airfoil
- - useradd -u 1001 -g airfoil airfoil
+ - useradd -u 1001 -G airfoil,docker airfoil
 
 # Add ubuntu to group airfoil
  - usermod -a -G airfoil ubuntu
@@ -53,7 +53,7 @@ runcmd:
  # Set priveleges
  - chown -R ubuntu:airfoil /home/ubuntu/acc-airfoil 
  - chmod -R 644 /home/ubuntu/acc-airfoil 
- - chmod 755 /home/ubuntu/acc-airfoil 
+ - find chmod 755 /home/ubuntu/acc-airfoil 
 
 # Mount NFS dir
  - cd /home/ubuntu/acc-airfoil
