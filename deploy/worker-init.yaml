@@ -26,7 +26,8 @@ runcmd:
 
 # Create group and user airfoil
  - groupadd -g 1001 airfoil
- - useradd -u 1001 -G airfoil,docker airfoil
+ - useradd -u 1001 airfoil
+ - usermod -a -G airfoil,docker airfoil
 
 # Add ubuntu to group airfoil
  - usermod -a -G airfoil ubuntu
