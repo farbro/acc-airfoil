@@ -95,6 +95,8 @@ def get_file(filename):
 
 @celery.task
 def process_file(angle):
+    global results_path
+
 #    cmd1 = "cd ./murtazo/cloudnaca/"
     cmd = "./murtazo/cloudnaca/runair.sh 2 0.01 10. 1 " + str(angle) +" 10 0"
 #    cmd = cmd1 + " && " + cmd2
