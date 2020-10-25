@@ -51,11 +51,16 @@ runcmd:
  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
  - sudo apt-get update
  - apt-cache policy docker-ce
- - sudo apt-get install -y docker-ce gmsh python-numpy
+ - sudo apt-get install -y docker-ce
  
  # deploy fenics container
  - sudo docker run --name fenics_cont -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
+ 
+ # Install packages inside docker container
+ - docker exec -i fenics_cont apt update
+ - docker exec -i fenics_cont apt install -y gmsh python-numpy
 
+ # Copy murtazo binaries
  - sudo docker cp acc-airfoil/murtazo fenics_cont:/home/fenics/shared/.
 
  # Set priveleges
