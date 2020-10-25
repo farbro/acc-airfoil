@@ -13,7 +13,7 @@ app = Flask(__name__)
 celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@g2-test-main.local:5672/twhost')
 
 mesh_files = "data/*"
-results_path = 'data/results'
+results_path = 'data/'
 
 result_data = {} 
 results = []
@@ -99,11 +99,11 @@ def process_file(angle):
     subp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     subp.wait()
     if subp.poll() == 0:
-        results_filename = "r0a" + str(angle) + "n200.m " + results_path + "r0a" + str(angle) + "n200.m"
+        results_filename = "r0a" + str(angle) + "n10.m"
         cpcmd = "docker cp fenics_cont:/home/fenics/shared/murtazo/navier_stokes_solver/results/" + results_filename + " " + results_path
+        print(cpcmd)
         subprocess.run(cpcmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        dir_res = results_path + results_filename
-        return dir_res
+        return results_filename
     else:
         return 0
 
