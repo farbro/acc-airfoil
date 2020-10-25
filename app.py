@@ -10,7 +10,7 @@ import os
 import subprocess
 
 app = Flask(__name__)
-celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@192.168.2.101:5672/twhost')
+celery = Celery(app.name, backend='rpc://', broker='pyamqp://worker:fnurkgurk@g2-test-main.local:5672/twhost')
 
 mesh_files = "data/*"
 results_path = 'data/results'
