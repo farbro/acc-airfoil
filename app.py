@@ -87,7 +87,7 @@ def get_result_data():
     return jsonify(result_data)
 
 # Serve result files
-@app.route('/get-file/<path:filename>', methods=['GET'])
+@app.route('/files/<path:filename>', methods=['GET'])
 def get_file(filename):
     return send_from_directory(results_path, filename, as_attachment=True)
 
