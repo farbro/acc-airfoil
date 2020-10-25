@@ -12,6 +12,13 @@ packages:
 
 byobu_default: system 
 
+write_files:
+  - path: /etc/docker/daemon.json
+    content: |
+      {
+        "mtu": 1400
+      } 
+
 runcmd:
 # Setup ssh keys
  - echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDnb/qBTnmXiU3T4yBLgNr6p2LPbspEf1wMqbyDmjoqsEF4vWmfeMeZMUrdpwjcBvlpyczyG+UQfacOLzgK3OwXXMesiCn/4HDSmiJbY5+Z3NgZAKZP73b6dMxpbjr5RPuHWMQfm6jBqaODuA/lRs7iOTDczYaacmERsF7wT3jSHjRjXHCTZX2y0+XK43mFUGyA1NGmxvwbmA47OhC3hkcpjxtT15lKlWChgkX4DyCKJOHK5c2IfAOAX1pT+o1K5/QQHCtdTHqbi9lMwTIgKUTBQFe1CgRO1dyojOv9/gYT2QPv+B7/j4IeOsynHav2WQpM9dinKqHeb4iLzF6XqFxv mats@ugh" >> /home/ubuntu/.ssh/authorized_keys
