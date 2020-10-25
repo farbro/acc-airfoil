@@ -27,7 +27,6 @@ runcmd:
 # Create group and user airfoil
  - groupadd -g 1001 airfoil
  - useradd -u 1001 -g airfoil airfoil
- - usermod -a -G docker airfoil 
 
 # Add ubuntu to group airfoil
  - usermod -a -G airfoil ubuntu
@@ -52,6 +51,7 @@ runcmd:
  - sudo apt-get update
  - apt-cache policy docker-ce
  - sudo apt-get install -y docker-ce
+
  
  # deploy fenics container
  - sudo docker run --name fenics_cont -td -v $(pwd):/home/fenics/shared -w /home/fenics/shared quay.io/fenicsproject/stable:current
@@ -62,6 +62,9 @@ runcmd:
 
  # Copy murtazo binaries
  - sudo docker cp acc-airfoil/murtazo fenics_cont:/home/fenics/shared/.
+
+ # Add airfoil user to docker group
+ - usermod -a -G docker airfoil 
 
  # Set priveleges
  - chown -R ubuntu:airfoil /home/ubuntu/acc-airfoil 
