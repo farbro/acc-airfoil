@@ -50,9 +50,7 @@ def run():
 
         angle = min_angle
         for n in range(num_angles):
-            angle_arg = float(angle[0])
-            angle_arg = floor(angle_arg)
-            results.append(process_file.delay(angle))
+            results.append(process_file.delay(int(angle)))
             angle += angle_step
     # TODO run webhooks to scale out
 
